@@ -209,7 +209,7 @@ def invokeCmd(cmdPath, cmdArgs = None, bRemoveTrailingNewLinesFromStdOut = True,
 			f.write("================================================================================================================================\n")
 			f.write('EXECUTING: ' + str(cmd) + "\n")
 
-	p = subprocess.Popen(cmd, shell = False, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = None)
+	p = subprocess.Popen(cmd, shell = False, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = None if inputData is None else subprocess.PIPE)
 	(stdout, stderr) = p.communicate(input = inputData)
 
 	output = []
