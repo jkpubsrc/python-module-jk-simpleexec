@@ -185,9 +185,16 @@ def simpleExecEnableDebugging(debuggingFilePath):
 # @param		string[] cmdArgs			A list of arguments. Specify <c>None</c> if you do not want to have any arguments.
 # @param		string onErrorExceptionMsg	If you specify an error message here an exception is thrown. If <c>None</c> is specified
 #											<c>None</c> will be returned and no exception will be thrown.
+# @param		mixed inputData				Either a string or binary data (or None) that should be passed on to the application invoked usint STDIN.
+#											If string data is presented it is automatically encoded using UTF-8
 # @return		CommandOutput				Returns an object representing the results.
 #
-def invokeCmd(cmdPath, cmdArgs, bRemoveTrailingNewLinesFromStdOut = True, bRemoveTrailingNewLinesFromStdErr = True):
+def invokeCmd(cmdPath, cmdArgs, bRemoveTrailingNewLinesFromStdOut = True, bRemoveTrailingNewLinesFromStdErr = True, inputData = None):
+	if inputData != None:
+		if isinstance(inputData, str):
+			inputData = inputData.encode("utf-8")
+		else:
+			assert isinstance(inputData, (bytes, bytearray))
 	assert isinstance(cmdPath, str)
 	if cmdArgs is not None:
 		assert isinstance(cmdArgs, list)
@@ -202,8 +209,8 @@ def invokeCmd(cmdPath, cmdArgs, bRemoveTrailingNewLinesFromStdOut = True, bRemov
 			f.write("================================================================================================================================\n")
 			f.write('EXECUTING: ' + str(cmd) + "\n")
 
-	p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	(stdout, stderr) = p.communicate()
+	p = subprocess.Popen(cmd, shell = False, stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = None)
+	(stdout, stderr) = p.communicate(input = inputData)
 
 	output = []
 	stdOutData = stdout.decode("utf-8")
