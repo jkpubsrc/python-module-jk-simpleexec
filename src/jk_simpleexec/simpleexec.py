@@ -189,7 +189,7 @@ def simpleExecEnableDebugging(debuggingFilePath):
 #											If string data is presented it is automatically encoded using UTF-8
 # @return		CommandOutput				Returns an object representing the results.
 #
-def invokeCmd(cmdPath, cmdArgs, bRemoveTrailingNewLinesFromStdOut = True, bRemoveTrailingNewLinesFromStdErr = True, inputData = None):
+def invokeCmd(cmdPath, cmdArgs = None, bRemoveTrailingNewLinesFromStdOut = True, bRemoveTrailingNewLinesFromStdErr = True, inputData = None):
 	if inputData != None:
 		if isinstance(inputData, str):
 			inputData = inputData.encode("utf-8")
