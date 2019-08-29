@@ -11,15 +11,16 @@ import abc
 
 import sh
 
-from jk_simpleexec import invokeCmd, simpleExecEnableDebugging
-simpleExecEnableDebugging("/tmp/jk_simpleexec.log")
+import jk_simpleexec
+#jk_simpleexec.simpleExecEnableDebugging("/tmp/jk_simpleexec.log")
 
 
 print()
 print("-- Executing a regular command --")
 print()
 
-result = invokeCmd("/bin/ls", [ "/proc/1", "-l" ])
+result = jk_simpleexec.invokeCmd("/bin/ls", [ "/proc/1", "-l" ])
+assert isinstance(result, jk_simpleexec.CommandResult)
 result.dump()
 
 

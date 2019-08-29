@@ -3,164 +3,21 @@
 
 
 
+from typing import Union,Sequence
 import os
 import time
 import traceback
 import sys
 import abc
 import subprocess
+import json
 from io import StringIO, BytesIO
 import xml.etree.ElementTree as ElementTree
 from lxml import etree as lxmletree
 
 import sh
 
-
-
-
-#
-# Objects of this class represent the processing result of a command.
-#
-class CommandResult(object):
-
-	def __init__(self, cmd, cmdArgs, stdOutLines, stdErrLines, returnCode):
-		self.__cmd = cmd
-		self.__cmdArgs = cmdArgs
-		self.__stdOutLines = stdOutLines
-		self.__stdErrLines = stdErrLines
-		self.__returnCode = returnCode
-
-
-
-	#
-	# Returns the path used for invokation of the command.
-	# @return		string			The file path.
-	#
-	@property
-	def commandPath(self):
-		return self.__cmd
-
-
-
-	#
-	# Returns the arguments used for invokation of the command.
-	# @return		string[]		The list of arguments (possibly an empty list or <c>None</c>).
-	#
-	@property
-	def commandArguments(self):
-		return self.__cmdArgs
-
-
-
-	#
-	# The return code of the command after completion.
-	# @return		int			The return code.
-	#
-	@property
-	def returnCode(self):
-		return self.__returnCode
-
-
-
-	#
-	# The STDOUT output of the command.
-	# @return		string[]		The output split into seperate lines. This property always returns a list, never <c>None</c>.
-	#
-	@property
-	def stdOutLines(self):
-		return self.__stdOutLines
-
-
-
-	#
-	# Return the text data as a regular ElemenTree object.
-	#
-	def getStdOutAsXML(self):
-		lines = '\n'.join(self.__stdOutLines)
-		xRoot = ElementTree.fromstring(lines)
-		return xRoot
-
-
-
-	#
-	# Return the text data as an LXML tree object.
-	#
-	def getStdOutAsLXML(self):
-		lines = '\n'.join(self.__stdOutLines)
-		parser = lxmletree.XMLParser(remove_blank_text=True)
-		xRoot = lxmletree.parse(BytesIO(lines.encode("utf-8")), parser)
-		return xRoot
-
-
-
-	#
-	# The STDERR output of the command.
-	# @return		string[]		The output split into seperate lines. This property always returns a list, never <c>None</c>.
-	#
-	@property
-	def stdErrLines(self):
-		return self.__stdErrLines
-
-
-
-	#
-	# Returns <c>True</c> iff the return code is not zero or <c>STDERR</c> contains data
-	#
-	@property
-	def isError(self):
-		return (self.__returnCode != 0) or (len(self.__stdErrLines) > 0)
-
-
-
-	#
-	# If the return code is not zero or <c>STDERR</c> contains data
-	# an exception is thrown using the specified exception message.
-	#
-	# @param		string exceptionMessage			The message for the exception raised.
-	# @return		CommandOutput					If no exception is raised the object itself is returned.
-	#
-	def raiseExceptionOnError(self, exceptionMessage, bDumpStatusOnError = False):
-		if self.isError:
-			if bDumpStatusOnError:
-				self.dump()
-			raise Exception(exceptionMessage)
-		else:
-			return self
-
-
-
-	#
-	# Write all data to STDOUT. This method is provided for debugging purposes of your software.
-	#
-	def dump(self, prefix = None):
-		if prefix is None:
-			prefix = ""
-		print(prefix + "COMMAND: " + self.__cmd)
-		print(prefix + "ARGUMENTS: " + str(self.__cmdArgs))
-		for line in self.__stdOutLines:
-			print(prefix + "STDOUT: " + line)
-		for line in self.__stdErrLines:
-			print(prefix + "STDERR: " + line)
-		print(prefix + "RETURNCODE: " + str(self.__returnCode))
-
-
-
-	#
-	# Returns a dictionary containing all data.
-	# @return		dict			Returns a dictionary with data registered at the following keys:
-	#								"cmd", "cmdArgs", "stdOut", "stdErr", "retCode"
-	#
-	def toJSON(self):
-		return {
-			"cmd": self.__cmd,
-			"cmdArgs" : self.__cmdArgs,
-			"stdOut" : self.__stdOutLines,
-			"stdErr" : self.__stdErrLines,
-			"retCode" : self.__returnCode,
-		}
-
-
-
+from .CommandResult import CommandResult
 
 
 
@@ -172,7 +29,7 @@ this.debugFilePath = None
 
 def simpleExecEnableDebugging(debuggingFilePath):
 	this.debugFilePath = debuggingFilePath
-
+#
 
 
 
@@ -187,10 +44,25 @@ def simpleExecEnableDebugging(debuggingFilePath):
 #											<c>None</c> will be returned and no exception will be thrown.
 # @return		CommandOutput				Returns an object representing the results.
 #
-def invokeCmd(cmdPath, cmdArgs, bRemoveTrailingNewLinesFromStdOut = True, bRemoveTrailingNewLinesFromStdErr = True):
+def invokeCmd(
+	cmdPath:str,
+	cmdArgs:list,
+	bRemoveTrailingNewLinesFromStdOut:bool = True,
+	bRemoveTrailingNewLinesFromStdErr:bool = True,
+	dataToPipeAsStdIn:Union[str,bytes,bytearray] = None
+	):
+
 	assert isinstance(cmdPath, str)
 	if cmdArgs is not None:
-		assert isinstance(cmdArgs, list)
+		assert isinstance(cmdArgs, (list, tuple))
+
+	if dataToPipeAsStdIn:
+		if isinstance(dataToPipeAsStdIn, str):
+			dataToPipeAsStdIn = dataToPipeAsStdIn.encode("utf-8")
+		elif isinstance(dataToPipeAsStdIn, (bytes, bytearray)):
+			pass
+		else:
+			raise Exception("Can only pipe string data and byte arrays!")
 
 	cmd = []
 	cmd.append(cmdPath)
@@ -202,7 +74,11 @@ def invokeCmd(cmdPath, cmdArgs, bRemoveTrailingNewLinesFromStdOut = True, bRemov
 			f.write("================================================================================================================================\n")
 			f.write('EXECUTING: ' + str(cmd) + "\n")
 
-	p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	if dataToPipeAsStdIn:
+		p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+		p.stdin.write(dataToPipeAsStdIn)
+	else:
+		p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	(stdout, stderr) = p.communicate()
 
 	output = []
@@ -235,6 +111,7 @@ def invokeCmd(cmdPath, cmdArgs, bRemoveTrailingNewLinesFromStdOut = True, bRemov
 			del outputErr[len(outputErr) - 1]
 
 	return CommandResult(cmdPath, cmdArgs, output, outputErr, p.returncode)
+#
 
 
 
