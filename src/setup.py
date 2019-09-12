@@ -24,9 +24,10 @@ setup(
 		"License :: OSI Approved :: Apache Software License",
 	],
 	description = "Python module to run command line programs in a very convenient way.",
-	download_url = "https://github.com/jkpubsrc/python-module-jk-simpleexec/tarball/0.2019.9.11",
+	download_url = "https://github.com/jkpubsrc/python-module-jk-simpleexec/tarball/0.2019.9.12",
 	include_package_data = False,
 	install_requires = [
+		"lxml",
 	],
 	keywords = [
 		"exec",
@@ -40,7 +41,7 @@ setup(
 		"jk_simpleexec",
 	],
 	url = "https://github.com/jkpubsrc/python-module-jk-simpleexec",
-	version = "0.2019.9.11",
+	version = "0.2019.9.12",
 	zip_safe = False,
 	long_description = readme(),
 	long_description_content_type="text/markdown",

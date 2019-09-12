@@ -1,5 +1,4 @@
 ﻿#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 
 
@@ -14,8 +13,6 @@ import json
 from io import StringIO, BytesIO
 import xml.etree.ElementTree as ElementTree
 from lxml import etree as lxmletree
-
-import sh
 
 from .CommandResult import CommandResult
 

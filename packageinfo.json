@@ -1,7 +1,7 @@
 {
 	"language": "python3",
 	"name": "jk_simpleexec",
-	"version": "0.2019.9.11",
+	"version": "0.2019.9.12",
 	"meta": {
 		"description": "Python module to run command line programs in a very convenient way.",
 		"keywords": [
@@ -31,6 +31,7 @@
 		},
 		{
 			"type": "pypy",
+			"project": "jk-simpleexec",
 			"devon_publish": false
 		}
 	],
@@ -43,6 +44,7 @@
 	},
 	"requirements": {
 		"python_packages": [
+			"lxml"
 		],
 		"python_packages_dev": [
 		]

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 
 
@@ -8,8 +7,6 @@ import time
 import traceback
 import sys
 import abc
-
-import sh
 
 import jk_simpleexec
 #jk_simpleexec.simpleExecEnableDebugging("/tmp/jk_simpleexec.log")
