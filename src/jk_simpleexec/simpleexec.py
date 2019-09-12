@@ -49,68 +49,83 @@ def invokeCmd(
 	cmdArgs:list,
 	bRemoveTrailingNewLinesFromStdOut:bool = True,
 	bRemoveTrailingNewLinesFromStdErr:bool = True,
-	dataToPipeAsStdIn:Union[str,bytes,bytearray] = None
-	):
+	dataToPipeAsStdIn:Union[str,bytes,bytearray] = None,
+	workingDirectory:str = None
+	) -> CommandResult:
 
 	assert isinstance(cmdPath, str)
 	if cmdArgs is not None:
 		assert isinstance(cmdArgs, (list, tuple))
 
-	if dataToPipeAsStdIn:
-		if isinstance(dataToPipeAsStdIn, str):
-			dataToPipeAsStdIn = dataToPipeAsStdIn.encode("utf-8")
-		elif isinstance(dataToPipeAsStdIn, (bytes, bytearray)):
-			pass
-		else:
-			raise Exception("Can only pipe string data and byte arrays!")
-
-	cmd = []
-	cmd.append(cmdPath)
-	if cmdArgs is not None:
-		cmd.extend(cmdArgs)
-
-	if this.debugFilePath != None:
-		with open(this.debugFilePath, 'a') as f:
-			f.write("================================================================================================================================\n")
-			f.write('EXECUTING: ' + str(cmd) + "\n")
-
-	if dataToPipeAsStdIn:
-		p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-		p.stdin.write(dataToPipeAsStdIn)
+	if workingDirectory:
+		assert isinstance(workingDirectory, str)
+		returnToDirectory = os.getcwd()
 	else:
-		p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	(stdout, stderr) = p.communicate()
+		returnToDirectory = None
 
-	output = []
-	stdOutData = stdout.decode("utf-8")
+	try:
+		if workingDirectory:
+			os.chdir(workingDirectory)
 
-	if this.debugFilePath != None:
-		with open(this.debugFilePath, 'a') as f:
-			f.write("STDOUT:\n")
-			f.write(stdOutData + "\n")
+		if dataToPipeAsStdIn:
+			if isinstance(dataToPipeAsStdIn, str):
+				dataToPipeAsStdIn = dataToPipeAsStdIn.encode("utf-8")
+			elif isinstance(dataToPipeAsStdIn, (bytes, bytearray)):
+				pass
+			else:
+				raise Exception("Can only pipe string data and byte arrays!")
 
-	for line in stdOutData.split("\n"):
-		output.append(line.rstrip())
+		cmd = []
+		cmd.append(cmdPath)
+		if cmdArgs is not None:
+			cmd.extend(cmdArgs)
 
-	if bRemoveTrailingNewLinesFromStdOut:
-		while (len(output) > 0) and (len(output[len(output) - 1]) == 0):
-			del output[len(output) - 1]
+		if this.debugFilePath != None:
+			with open(this.debugFilePath, 'a') as f:
+				f.write("================================================================================================================================\n")
+				f.write('EXECUTING: ' + str(cmd) + "\n")
 
-	outputErr = []
-	stdErrData = stderr.decode("utf-8")
+		if dataToPipeAsStdIn:
+			p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+			p.stdin.write(dataToPipeAsStdIn)
+		else:
+			p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+		(stdout, stderr) = p.communicate()
 
-	if this.debugFilePath != None:
-		with open(this.debugFilePath, 'a') as f:
-			f.write("STDERR:\n")
-			f.write(stdErrData + "\n")
+		output = []
+		stdOutData = stdout.decode("utf-8")
 
-	for line in stdErrData.split("\n"):
-		outputErr.append(line.rstrip())
-	if bRemoveTrailingNewLinesFromStdErr:
-		while (len(outputErr) > 0) and (len(outputErr[len(outputErr) - 1]) == 0):
-			del outputErr[len(outputErr) - 1]
+		if this.debugFilePath != None:
+			with open(this.debugFilePath, 'a') as f:
+				f.write("STDOUT:\n")
+				f.write(stdOutData + "\n")
 
-	return CommandResult(cmdPath, cmdArgs, output, outputErr, p.returncode)
+		for line in stdOutData.split("\n"):
+			output.append(line.rstrip())
+
+		if bRemoveTrailingNewLinesFromStdOut:
+			while (len(output) > 0) and (len(output[len(output) - 1]) == 0):
+				del output[len(output) - 1]
+
+		outputErr = []
+		stdErrData = stderr.decode("utf-8")
+
+		if this.debugFilePath != None:
+			with open(this.debugFilePath, 'a') as f:
+				f.write("STDERR:\n")
+				f.write(stdErrData + "\n")
+
+		for line in stdErrData.split("\n"):
+			outputErr.append(line.rstrip())
+		if bRemoveTrailingNewLinesFromStdErr:
+			while (len(outputErr) > 0) and (len(outputErr[len(outputErr) - 1]) == 0):
+				del outputErr[len(outputErr) - 1]
+
+		return CommandResult(cmdPath, cmdArgs, output, outputErr, p.returncode)
+	
+	finally:
+		if returnToDirectory:
+			os.chdir(returnToDirectory)
 #
 
 

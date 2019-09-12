@@ -1,0 +1,51 @@
+{
+	"language": "python3",
+	"name": "jk_simpleexec",
+	"version": "0.2019.9.11",
+	"meta": {
+		"description": "Python module to run command line programs in a very convenient way.",
+		"keywords": [
+			"exec",
+			"shell",
+			"execute",
+			"Popen"
+		],
+		"license": "Apache 2.0",
+		"development_status": "stable",
+		"authors": [
+			{
+				"name": "Jürgen Knauth",
+				"email": "pubsrc@binary-overflow.de"
+			}
+		],
+		"wiki": {
+			"page": "DevDocs:jk_simpleexec"
+		}
+	},
+	"repositories": [
+		{
+			"type": "github",
+			"user": "jkpubsrc",
+			"project": "python-module-jk-simpleexec",
+			"devon_publish": false
+		},
+		{
+			"type": "pypy",
+			"devon_publish": false
+		}
+	],
+	"source": {
+		"packages": [
+			"jk_simpleexec"
+		],
+		"extra_data_files": [
+		]
+	},
+	"requirements": {
+		"python_packages": [
+		],
+		"python_packages_dev": [
+		]
+	}
+}
+
