@@ -42,6 +42,8 @@ def simpleExecEnableDebugging(debuggingFilePath):
 # @param		string[] cmdArgs			A list of arguments. Specify <c>None</c> if you do not want to have any arguments.
 # @param		string onErrorExceptionMsg	If you specify an error message here an exception is thrown. If <c>None</c> is specified
 #											<c>None</c> will be returned and no exception will be thrown.
+# @param		mixed inputData				Either a string or binary data (or None) that should be passed on to the application invoked usint STDIN.
+#											If string data is presented it is automatically encoded using UTF-8
 # @return		CommandOutput				Returns an object representing the results.
 #
 def invokeCmd(
@@ -89,7 +91,7 @@ def invokeCmd(
 			p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
 			p.stdin.write(dataToPipeAsStdIn)
 		else:
-			p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+			p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=None)
 		(stdout, stderr) = p.communicate()
 
 		output = []
