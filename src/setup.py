@@ -19,7 +19,6 @@ setup(
 	author = "Jürgen Knauth",
 	author_email = "pubsrc@binary-overflow.de",
 	classifiers = [
-		"Programming Language :: Python :: 3",
 		"Development Status :: 5 - Production/Stable",
 		"License :: OSI Approved :: Apache Software License",
 	],
