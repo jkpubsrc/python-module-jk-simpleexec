@@ -1,14 +1,16 @@
 {
 	"language": "python3",
 	"name": "jk_simpleexec",
-	"version": "0.2019.9.12",
+	"version": "0.2020.2.14",
 	"meta": {
-		"description": "Python module to run command line programs in a very convenient way.",
+		"description": "Python module to manage processes (especially command line programs) in a very convenient way.",
 		"keywords": [
 			"exec",
 			"shell",
 			"execute",
-			"Popen"
+			"Popen",
+			"kill",
+			"spawn"
 		],
 		"license": "Apache 2.0",
 		"development_status": "stable",

@@ -1,18 +1,9 @@
-﻿#!/usr/bin/env python3
+﻿
 
 
-
-from typing import Union,Sequence
 import os
-import time
-import traceback
 import sys
-import abc
 import subprocess
-import json
-from io import StringIO, BytesIO
-import xml.etree.ElementTree as ElementTree
-from lxml import etree as lxmletree
 
 from .CommandResult import CommandResult
 
@@ -121,7 +112,7 @@ def invokeCmd(
 				del outputErr[len(outputErr) - 1]
 
 		return CommandResult(cmdPath, cmdArgs, output, outputErr, p.returncode)
-	
+
 	finally:
 		if returnToDirectory:
 			os.chdir(returnToDirectory)

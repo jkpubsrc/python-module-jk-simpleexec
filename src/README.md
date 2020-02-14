@@ -4,7 +4,7 @@
 Introduction
 ------------
 
-This python module provides a convenient interface to execute commands and catch their output.
+This python module provides a convenient interface to execute commands and catch their output. Additionally it provides convenient ways of running and killing other processes.
 
 Information about this module can be found here:
 
