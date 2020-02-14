@@ -4,6 +4,7 @@
 import os
 import sys
 import subprocess
+import typing
 
 from .CommandResult import CommandResult
 
@@ -39,7 +40,7 @@ def invokeCmd(
 	cmdArgs:list,
 	bRemoveTrailingNewLinesFromStdOut:bool = True,
 	bRemoveTrailingNewLinesFromStdErr:bool = True,
-	dataToPipeAsStdIn:Union[str,bytes,bytearray] = None,
+	dataToPipeAsStdIn:typing.Union[str,bytes,bytearray] = None,
 	workingDirectory:str = None
 	) -> CommandResult:
 
