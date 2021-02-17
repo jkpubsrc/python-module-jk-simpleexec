@@ -206,10 +206,10 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	# @param		str exceptionMessage			The message for the exception raised.
 	# @return		CommandOutput					If no exception is raised the object itself is returned.
 	#
-	def raiseExceptionOnError(self, exceptionMessage:str, bDumpStatusOnError:bool = False):
+	def raiseExceptionOnError(self, exceptionMessage:str, bDumpStatusOnError:bool = False, printFunc = None):
 		if self.isError:
 			if bDumpStatusOnError:
-				self.dump()
+				self.dump(printFunc = printFunc)
 			raise Exception(exceptionMessage)
 		else:
 			return self
