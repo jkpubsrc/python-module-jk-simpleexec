@@ -1,6 +1,6 @@
 ﻿
 
-
+import typing
 import os
 import time
 import traceback
@@ -11,130 +11,199 @@ import json
 from io import StringIO, BytesIO
 import xml.etree.ElementTree as ElementTree
 
+import jk_prettyprintobj
+from jk_cmdoutputparsinghelper.TextData import TextData
+
+
+
 
 
 
 #
 # Objects of this class represent the processing result of a command.
 #
-class CommandResult(object):
+class CommandResult(jk_prettyprintobj.DumpMixin):
 
-	def __init__(self, cmd, cmdArgs, stdOutLines, stdErrLines, returnCode):
+	################################################################################################################################
+	## Constructor
+	################################################################################################################################
+
+	def __init__(self,
+			cmd:str,
+			cmdArgs:list,
+			stdOut:typing.Union[list,tuple,str,TextData],
+			stdErr:typing.Union[list,tuple,str,TextData],
+			returnCode:int,
+		):
+
 		self.__cmd = cmd
 		self.__cmdArgs = cmdArgs
-		self.__stdOutLines = stdOutLines
-		self.__stdErrLines = stdErrLines
+		self.__stdOut = stdOut if isinstance(stdOut, TextData) else TextData(stdOut)
+		self.__stdErr = stdErr if isinstance(stdErr, TextData) else TextData(stdErr)
 		self.__returnCode = returnCode
 	#
 
-
+	################################################################################################################################
+	## Public Properties
+	################################################################################################################################
 
 	#
-	# Returns the path used for invokation of the command.
-	# @return		string			The file path.
+	# Returns the path used for invokation of the command-
+	#
+	# @return		str			The file path.
 	#
 	@property
-	def commandPath(self):
+	def commandPath(self) -> str:
 		return self.__cmd
 	#
 
-
-
 	#
 	# Returns the arguments used for invokation of the command.
-	# @return		string[]		The list of arguments (possibly an empty list or <c>None</c>).
+	#
+	# @return		str[]		The list of arguments (possibly an empty list or <c>None</c>).
 	#
 	@property
-	def commandArguments(self):
+	def commandArguments(self) -> list:
 		return self.__cmdArgs
 	#
 
-
-
 	#
 	# The return code of the command after completion.
+	#
 	# @return		int			The return code.
 	#
 	@property
-	def returnCode(self):
+	def returnCode(self) -> int:
 		return self.__returnCode
 	#
 
+	#
+	# The STDOUT output of the command.
+	# This is the same as invoking <c>stdOut.lines</c>.
+	#
+	# @return		str[]		The output split into seperate lines. This property always returns a list, never <c>None</c>.
+	#
+	@property
+	def stdOutLines(self) -> list:
+		return self.__stdOut.lines
+	#
 
+	#
+	# The STDERR output of the command.
+	# This is the same as invoking <c>stdErr.lines</c>.
+	#
+	# @return		str[]		The output split into seperate lines. This property always returns a list, never <c>None</c>.
+	#
+	@property
+	def stdErrLines(self) -> list:
+		return self.__stdErr.lines
+	#
 
 	#
 	# The STDOUT output of the command.
-	# @return		string[]		The output split into seperate lines. This property always returns a list, never <c>None</c>.
+	# This is the same as invoking <c>stdOut.text</c>.
+	#
+	# @return		str[]		The output as <c>str</c>. This property always returns a list, never <c>None</c>.
 	#
 	@property
-	def stdOutLines(self):
-		return self.__stdOutLines
+	def stdOutStr(self) -> str:
+		return self.__stdOut.text
 	#
 
+	#
+	# The STDERR output of the command.
+	# This is the same as invoking <c>stdErr.text</c>.
+	#
+	# @return		str[]		The output as <c>str</c>. This property always returns a list, never <c>None</c>.
+	#
+	@property
+	def stdErrStr(self) -> str:
+		return self.__stdErr.text
+	#
 
+	#
+	# Direct access to the internal TextData object that stores STDOUT output.
+	#
+	# @return		jk_cmdoutputparsinghelper.TextData			The TextData object that holds the text data.
+	#
+	@property
+	def stdOut(self) -> TextData:
+		return self.__stdOut
+	#
+
+	#
+	# Direct access to the internal TextData object that stores STDERR output.
+	#
+	# @return		jk_cmdoutputparsinghelper.TextData			The TextData object that holds the text data.
+	#
+	@property
+	def stdErr(self) -> TextData:
+		return self.__stdErr
+	#
+
+	#
+	# Returns <c>True</c> if either the return code is non-zero or <c>STDERR</c> contains some data.
+	#
+	@property
+	def isError(self) -> bool:
+		return (self.__returnCode != 0) or (len(self.__stdErr.lines) > 0)
+	#
+
+	################################################################################################################################
+	## Helper Methods
+	################################################################################################################################
+
+	def _dumpVarNames(self) -> list:
+		return [
+			"commandPath",
+			"commandArguments",
+			"stdOutLines",
+			"stdErrLines",
+			"returnCode",
+			"isError",
+		]
+	#
+
+	################################################################################################################################
+	## Public Methods
+	################################################################################################################################
+
+	#
 	#
 	# Return the text data as a regular JSON object.
 	#
 	def getStdOutAsJSON(self):
-		lines = '\n'.join(self.__stdOutLines)
-		return json.loads(lines)
+		return json.loads(self.__stdOut.text)
 	#
-
-
 
 	#
 	# Return the text data as a regular ElemenTree object.
 	#
 	def getStdOutAsXML(self):
-		lines = '\n'.join(self.__stdOutLines)
-		xRoot = ElementTree.fromstring(lines)
+		xRoot = ElementTree.fromstring(self.__stdOut.text)
 		return xRoot
 	#
-
-
 
 	#
 	# Return the text data as an LXML tree object.
 	#
+	# NOTE: Invoking this method requires the python module "<c>lxml</c>" to be installed.
+	#
 	def getStdOutAsLXML(self):
-		lines = '\n'.join(self.__stdOutLines)
 		try:
 			from lxml import etree as lxmletree
 			parser = lxmletree.XMLParser(remove_blank_text=True)
 		except Exception as e:
 			raise Exception("lxml module is required for getStdOutAsLXML() to work!")
-		xRoot = lxmletree.parse(BytesIO(lines.encode("utf-8")), parser)
+		xRoot = lxmletree.parse(BytesIO(self.__stdOut.text.encode("utf-8")), parser)
 		return xRoot
 	#
-
-
-
-	#
-	# The STDERR output of the command.
-	# @return		string[]		The output split into seperate lines. This property always returns a list, never <c>None</c>.
-	#
-	@property
-	def stdErrLines(self):
-		return self.__stdErrLines
-	#
-
-
-
-	#
-	# Returns <c>True</c> iff the return code is not zero or <c>STDERR</c> contains data
-	#
-	@property
-	def isError(self):
-		return (self.__returnCode != 0) or (len(self.__stdErrLines) > 0)
-	#
-
-
 
 	#
 	# If the return code is not zero or <c>STDERR</c> contains data
 	# an exception is thrown using the specified exception message.
 	#
-	# @param		string exceptionMessage			The message for the exception raised.
+	# @param		str exceptionMessage			The message for the exception raised.
 	# @return		CommandOutput					If no exception is raised the object itself is returned.
 	#
 	def raiseExceptionOnError(self, exceptionMessage, bDumpStatusOnError = False):
@@ -146,7 +215,8 @@ class CommandResult(object):
 			return self
 	#
 
-
+	"""
+	NOTE: this method dump() has been replaced by the version in `jk_prettyprintobj.DumpMixin`.
 
 	#
 	# Write all data to STDOUT. This method is provided for debugging purposes of your software.
@@ -158,14 +228,13 @@ class CommandResult(object):
 			prefix = ""
 		writeFunction(prefix + "COMMAND: " + self.__cmd)
 		writeFunction(prefix + "ARGUMENTS: " + str(self.__cmdArgs))
-		for line in self.__stdOutLines:
-			writeFunction(prefix + "STDOUT: " + line)
-		for line in self.__stdErrLines:
-			writeFunction(prefix + "STDERR: " + line)
+		for line in self.__stdOut:
+			writeFunction(prefix + "STDOUT: " + repr(line))
+		for line in self.__stdErr:
+			writeFunction(prefix + "STDERR: " + repr(line))
 		writeFunction(prefix + "RETURNCODE: " + str(self.__returnCode))
 	#
-
-
+	"""
 
 	#
 	# Returns a dictionary containing all data.
@@ -176,17 +245,13 @@ class CommandResult(object):
 		return {
 			"cmd": self.__cmd,
 			"cmdArgs" : self.__cmdArgs,
-			"stdOut" : self.__stdOutLines,
-			"stdErr" : self.__stdErrLines,
+			"stdOut" : self.__stdOut.lines,
+			"stdErr" : self.__stdErr.lines,
 			"retCode" : self.__returnCode,
 		}
 	#
 
-
-
 #
-
-
 
 
 

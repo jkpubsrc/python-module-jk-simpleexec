@@ -1,4 +1,4 @@
-﻿jk_simpleexec
+jk_simpleexec
 =============
 
 Introduction

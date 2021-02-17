@@ -1,0 +1,55 @@
+{
+	"language": "python3",
+	"name": "jk_simpleexec",
+	"version": "0.2020.2.14",
+	"meta": {
+		"description": "Python module to manage processes (especially command line programs) in a very convenient way.",
+		"keywords": [
+			"exec",
+			"shell",
+			"execute",
+			"Popen",
+			"kill",
+			"spawn"
+		],
+		"license": "Apache 2.0",
+		"development_status": "stable",
+		"authors": [
+			{
+				"name": "Jürgen Knauth",
+				"email": "pubsrc@binary-overflow.de"
+			}
+		],
+		"wiki": {
+			"page": "DevDocs:jk_simpleexec"
+		}
+	},
+	"repositories": [
+		{
+			"type": "github",
+			"user": "jkpubsrc",
+			"project": "python-module-jk-simpleexec",
+			"devon_publish": false
+		},
+		{
+			"type": "pypy",
+			"project": "jk-simpleexec",
+			"devon_publish": false
+		}
+	],
+	"source": {
+		"packages": [
+			"jk_simpleexec"
+		],
+		"extra_data_files": [
+		]
+	},
+	"requirements": {
+		"python_packages": [
+			"lxml"
+		],
+		"python_packages_dev": [
+		]
+	}
+}
+

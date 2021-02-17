@@ -21,12 +21,12 @@ setup(
 	classifiers = [
 		"Development Status :: 5 - Production/Stable",
 		"License :: OSI Approved :: Apache Software License",
+		"Programming Language :: Python :: 3",
 	],
-	description = "Python module to manage processes (especially command line programs) in a very convenient way.",
-	download_url = "https://github.com/jkpubsrc/python-module-jk-simpleexec/tarball/0.2020.2.14",
+	description = "Python module to run command line programs in a convenient way and retrieve their output after they terminated.",
 	include_package_data = False,
 	install_requires = [
-		"lxml",
+		"jk_prettyprintobj",
 	],
 	keywords = [
 		"exec",
@@ -36,13 +36,12 @@ setup(
 		"kill",
 		"spawn",
 	],
-	license = "Apache 2.0",
+	license = "Apache2",
 	name = "jk_simpleexec",
 	packages = [
 		"jk_simpleexec",
 	],
-	url = "https://github.com/jkpubsrc/python-module-jk-simpleexec",
-	version = "0.2020.2.14",
+	version = "0.2021.2.17",
 	zip_safe = False,
 	long_description = readme(),
 	long_description_content_type="text/markdown",

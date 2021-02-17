@@ -1,9 +1,18 @@
 {
-	"language": "python3",
-	"name": "jk_simpleexec",
-	"version": "0.2020.2.14",
+	"documentation": [],
+	"magic": {
+		"magic": "packageinfo",
+		"version": 2
+	},
 	"meta": {
-		"description": "Python module to manage processes (especially command line programs) in a very convenient way.",
+		"authors": [
+			{
+				"email": "pubsrc@binary-overflow.de",
+				"name": "J\u00fcrgen Knauth"
+			}
+		],
+		"description": "Python module to run command line programs in a convenient way and retrieve their output after they terminated.",
+		"development_status": "stable",
 		"keywords": [
 			"exec",
 			"shell",
@@ -12,44 +21,41 @@
 			"kill",
 			"spawn"
 		],
-		"license": "Apache 2.0",
-		"development_status": "stable",
-		"authors": [
-			{
-				"name": "Jürgen Knauth",
-				"email": "pubsrc@binary-overflow.de"
-			}
-		],
-		"wiki": {
-			"page": "DevDocs:jk_simpleexec"
-		}
+		"language": "python3",
+		"license": "Apache2",
+		"name": "jk_simpleexec",
+		"packageClass": "python-module",
+		"version": "0.2021.2.17"
 	},
 	"repositories": [
 		{
-			"type": "github",
-			"user": "jkpubsrc",
+			"devon_publish": false,
 			"project": "python-module-jk-simpleexec",
-			"devon_publish": false
+			"type": "github",
+			"user": "jkpubsrc"
 		},
 		{
-			"type": "pypy",
+			"devon_publish": false,
 			"project": "jk-simpleexec",
-			"devon_publish": false
+			"type": "pypi"
 		}
 	],
+	"requirements": {
+		"recommended_python_packages": [
+			"lxml",
+			"fabric",
+		],
+		"python_packages": [
+			"jk_prettyprintobj",
+		],
+		"python_packages_dev": [],
+		"system_apt_packages": []
+	},
 	"source": {
+		"extra_binary_files": [],
+		"extra_data_files": [],
 		"packages": [
 			"jk_simpleexec"
-		],
-		"extra_data_files": [
-		]
-	},
-	"requirements": {
-		"python_packages": [
-			"lxml"
-		],
-		"python_packages_dev": [
 		]
 	}
 }
-
