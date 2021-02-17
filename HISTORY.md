@@ -5,7 +5,7 @@
 	* Improved debugging using `jk_prettyprintobj` instead of the old custom code
 	* Added `invokeCmd1()` as a first step to migrate to a better API
 	* Added `runCmd()` to even more simplify running commands (requires `fabric`)
-
+	* Added documentation
 
 
 

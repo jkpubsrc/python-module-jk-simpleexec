@@ -126,19 +126,17 @@ def invokeCmd(
 #
 # Synchroneously invokes the specified command on the local machine. Output of STDOUT and STDERR is collected and returned by the <c>CommandResult</c> return object.
 #
-# NOTE: Despite for <c>cmdPath</c> and <c>cmdArgs</c> do <b>not</b> rely on the order of the arguments. If you need to specify them invoke them by name as they are
-# intended to be invoked that way! Their order might be changed unnoticed in other versions of this API.
+# @param		string cmdPath								(required) The (absolute) path to the program to invoke.
+# @param		string[] cmdArgs							(required) A list of arguments. Specify <c>None</c> if you do not want to have any arguments.
+#															Please note that there is no shell to interprete these commands.
+# @param		str|bytes[] dataToPipeAsStdIn				(optional) Either a string or binary data (or None) that should be passed on to the application invoked usint STDIN.
+#															If string data is presented it is automatically encoded using UTF-8
+# @param		str workingDirectory						(optional) If you specify a working directory here this function will change to this working directory
+#															specified in <c>workingDirector</c> and return to the previous one after the command has been completed.
+# @param		TextDataProcessingPolicy stdOutProcessing	(optional) If specified you can override defaults of the STDOUT preprocessing that can already be done by this function.
+# @param		TextDataProcessingPolicy stdErrProcessing	(optional) If specified you can override defaults of the STDERR preprocessing that can already be done by this function.
 #
-# @param		string cmdPath						(required) The (absolute) path to the program to invoke.
-# @param		string[] cmdArgs					(required) A list of arguments. Specify <c>None</c> if you do not want to have any arguments.
-#													Please note that there is no shell to interprete these commands.
-# @param		string onErrorExceptionMsg			If you specify an error message here an exception is thrown. If <c>None</c> is specified
-#													<c>None</c> will be returned and no exception will be thrown.
-# @param		str|bytes[] dataToPipeAsStdIn		(optional) Either a string or binary data (or None) that should be passed on to the application invoked usint STDIN.
-#													If string data is presented it is automatically encoded using UTF-8
-# @param		str workingDirectory				(optional) If you specify a working directory here this function will change to this working directory
-#													specified in <c>workingDirector</c> and return to the previous one after the command has been completed.
-# @return		CommandOutput						Returns an object that contains the exit status, STDOUT and STDERR data.
+# @return		CommandOutput								Returns an object that contains the exit status, (preprocessed) STDOUT and (preprocessed) STDERR data.
 #
 def invokeCmd1(
 		cmdPath:str,

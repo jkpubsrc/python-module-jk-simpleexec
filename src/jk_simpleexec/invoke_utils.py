@@ -31,9 +31,9 @@ except ImportError as ee:
 def runCmd(
 		c,
 		command:str,
-		failOnNonZeroExitCode:bool = True,
 		stdOutProcessing:TextDataProcessingPolicy = None,
 		stdErrProcessing:TextDataProcessingPolicy = None,
+		failOnNonZeroExitCode:bool = True,
 	) -> CommandResult:
 
 	stdOutProcessing = _common.DEFAULT_STDOUT_PROCESSING.override(stdOutProcessing)

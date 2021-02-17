@@ -48,7 +48,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	################################################################################################################################
 
 	#
-	# Returns the path used for invokation of the command-
+	# Returns the path used for invoking the command.
 	#
 	# @return		str			The file path.
 	#
@@ -58,7 +58,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	#
 
 	#
-	# Returns the arguments used for invokation of the command.
+	# Returns the arguments used for invoking the command.
 	#
 	# @return		str[]		The list of arguments (possibly an empty list or <c>None</c>).
 	#
@@ -78,7 +78,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	#
 
 	#
-	# The STDOUT output of the command.
+	# The STDOUT output of the command as a list of text lines.
 	# This is the same as invoking <c>stdOut.lines</c>.
 	#
 	# @return		str[]		The output split into seperate lines. This property always returns a list, never <c>None</c>.
@@ -89,7 +89,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	#
 
 	#
-	# The STDERR output of the command.
+	# The STDERR output of the command as a list of text lines.
 	# This is the same as invoking <c>stdErr.lines</c>.
 	#
 	# @return		str[]		The output split into seperate lines. This property always returns a list, never <c>None</c>.
@@ -100,7 +100,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	#
 
 	#
-	# The STDOUT output of the command.
+	# The STDOUT output of the command as a single string.
 	# This is the same as invoking <c>stdOut.text</c>.
 	#
 	# @return		str[]		The output as <c>str</c>. This property always returns a list, never <c>None</c>.
@@ -111,7 +111,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	#
 
 	#
-	# The STDERR output of the command.
+	# The STDERR output of the command as a single string.
 	# This is the same as invoking <c>stdErr.text</c>.
 	#
 	# @return		str[]		The output as <c>str</c>. This property always returns a list, never <c>None</c>.
@@ -122,7 +122,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	#
 
 	#
-	# Direct access to the internal TextData object that stores STDOUT output.
+	# Direct access to the internal `TextData` object that manages the STDOUT output.
 	#
 	# @return		jk_cmdoutputparsinghelper.TextData			The TextData object that holds the text data.
 	#
@@ -132,7 +132,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	#
 
 	#
-	# Direct access to the internal TextData object that stores STDERR output.
+	# Direct access to the internal `TextData` object that manages the STDERR output.
 	#
 	# @return		jk_cmdoutputparsinghelper.TextData			The TextData object that holds the text data.
 	#
@@ -170,14 +170,14 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 
 	#
 	#
-	# Return the text data as a regular JSON object.
+	# Interpret the text data as JSON data and return it.
 	#
 	def getStdOutAsJSON(self):
 		return json.loads(self.__stdOut.text)
 	#
 
 	#
-	# Return the text data as a regular ElemenTree object.
+	# Interpret the text data as XML and return an ElemenTree object.
 	#
 	def getStdOutAsXML(self):
 		xRoot = ElementTree.fromstring(self.__stdOut.text)
@@ -185,7 +185,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	#
 
 	#
-	# Return the text data as an LXML tree object.
+	# Interpret the text data as an LXML tree object and return it.
 	#
 	# NOTE: Invoking this method requires the python module "<c>lxml</c>" to be installed.
 	#
@@ -200,13 +200,13 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	#
 
 	#
-	# If the return code is not zero or <c>STDERR</c> contains data
+	# If the return code is no-zero or <c>STDERR</c> contains data
 	# an exception is thrown using the specified exception message.
 	#
 	# @param		str exceptionMessage			The message for the exception raised.
 	# @return		CommandOutput					If no exception is raised the object itself is returned.
 	#
-	def raiseExceptionOnError(self, exceptionMessage, bDumpStatusOnError = False):
+	def raiseExceptionOnError(self, exceptionMessage:str, bDumpStatusOnError:bool = False):
 		if self.isError:
 			if bDumpStatusOnError:
 				self.dump()
@@ -237,7 +237,8 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	"""
 
 	#
-	# Returns a dictionary containing all data.
+	# Convert the whole object to a JSON dictionary.
+	#
 	# @return		dict			Returns a dictionary with data registered at the following keys:
 	#								"cmd", "cmdArgs", "stdOut", "stdErr", "retCode"
 	#
