@@ -1,6 +1,7 @@
 
 import os
 import subprocess
+import invoke
 
 from . import _common as _common
 from .CommandResult import CommandResult
@@ -85,7 +86,10 @@ def runCmd(
 		if _common.debugValve:
 			_common.debugValve("Invoking via fabric: " + repr(command))
 
-		r = c.run(command, hide=True)
+		try:
+			r = c.run(command, hide=True)
+		except invoke.exceptions.UnexpectedExit as ee:
+			r = ee.result
 
 		if _common.debugValve:
 			_common.debugValve("exit status:", r.exited)

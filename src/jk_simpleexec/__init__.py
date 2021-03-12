@@ -1,6 +1,6 @@
 ﻿
 
-__version__ = "0.2021.2.17"
+__version__ = "0.2021.3.12"
 
 
 
@@ -10,4 +10,3 @@ from ._DebugValveToFile import _DebugValveToFile
 from ._common import enableDebugging, DEFAULT_STDOUT_PROCESSING, DEFAULT_STDERR_PROCESSING, processCmdOutput
 from .simpleexec import invokeCmd, invokeCmd1
 from .invoke_utils import runCmd
-

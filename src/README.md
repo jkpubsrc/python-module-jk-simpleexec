@@ -82,7 +82,7 @@ def invokeCmd1(
 
 ### The `CommandResult` object returned
 
-`CommandResult` objects are returned of commands have been executed successfully. Classes of that type will provide a set of properties and methods.
+`CommandResult` objects are returned if commands have been executed successfully. Classes of that type will provide a set of properties and methods.
 
 NOTE: I use signatures similiar to C-style here as this way the required types for arguments can be understood more easily.
 

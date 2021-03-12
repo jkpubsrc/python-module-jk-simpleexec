@@ -8,7 +8,8 @@
 	* Added documentation
 	* Improved: `raiseExceptionOnError()`
 
-
+* 2021-03-12
+	* Improved `runCmd()` to not throw an unexpected exception in fabric
 
 
 
