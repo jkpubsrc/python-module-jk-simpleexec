@@ -11,5 +11,8 @@
 * 2021-03-12
 	* Improved `runCmd()` to not throw an unexpected exception in fabric
 
+* 2021-04-12
+	* Added convenience methods to `CommandResult`
+	* Improved `invokeCmd1()` to support logging
 
 

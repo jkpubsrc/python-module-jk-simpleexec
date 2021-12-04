@@ -135,6 +135,11 @@ def invokeCmd(
 #															specified in <c>workingDirector</c> and return to the previous one after the command has been completed.
 # @param		TextDataProcessingPolicy stdOutProcessing	(optional) If specified you can override defaults of the STDOUT preprocessing that can already be done by this function.
 # @param		TextDataProcessingPolicy stdErrProcessing	(optional) If specified you can override defaults of the STDERR preprocessing that can already be done by this function.
+# @param		* log										(optional) You can specify a logger here. This logger will receive a notice about what command is going to be executed.
+#															For this to work the logger object specified here is checked against the following criterias (in the order listed):
+#															* have a method named `notice(..)` expecting a single string argument - the log message
+#															* have a method named `info(..)` expecting a single string argument - the log message
+#															* is callable (= is a method itself) expecting a single string argument - the log message
 #
 # @return		CommandOutput								Returns an object that contains the exit status, (preprocessed) STDOUT and (preprocessed) STDERR data.
 #
@@ -145,6 +150,7 @@ def invokeCmd1(
 		workingDirectory:str = None,
 		stdOutProcessing:TextDataProcessingPolicy = None,
 		stdErrProcessing:TextDataProcessingPolicy = None,
+		log = None,
 	) -> CommandResult:
 
 	stdOutProcessing = _common.DEFAULT_STDOUT_PROCESSING.override(stdOutProcessing)
@@ -175,14 +181,31 @@ def invokeCmd1(
 			else:
 				raise Exception("Can only pipe string data and byte arrays!")
 
+		# build list of arguments
+
 		cmd = []
 		cmd.append(cmdPath)
 		if cmdArgs is not None:
 			cmd.extend(cmdArgs)
 
+		# write log message if logger is specified
+
+		if log:
+			printFunc = getattr(log, "notice", None)
+			if printFunc is None:
+				printFunc = getattr(log, "info", None)
+				if printFunc is None:
+					assert callable(log)
+					printFunc = log
+			printFunc("run: " + cmdPath + " " + str(cmdArgs))
+
+		# write data to debug valve
+
 		if _common.debugValve:
 			_common.debugValve("================================================================================================================================")
-			_common.debugValve("EXECUTING:", cmd)
+			_common.debugValve("EXECUTING:", cmd + " " + str(cmdArgs))
+
+		# run the processes
 
 		if dataToPipeAsStdIn:
 			p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)

@@ -26,7 +26,9 @@ setup(
 	description = "Python module to run command line programs in a convenient way and retrieve their output after they terminated.",
 	include_package_data = False,
 	install_requires = [
+		"invoke",
 		"jk_prettyprintobj",
+		"jk_cmdoutputparsinghelper",
 	],
 	keywords = [
 		"exec",
@@ -41,7 +43,7 @@ setup(
 	packages = [
 		"jk_simpleexec",
 	],
-	version = "0.2021.3.12",
+	version = "0.2021.12.4",
 	zip_safe = False,
 	long_description = readme(),
 	long_description_content_type="text/markdown",

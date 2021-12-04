@@ -25,7 +25,7 @@
 		"license": "Apache2",
 		"name": "jk_simpleexec",
 		"packageClass": "python-module",
-		"version": "0.2021.3.12"
+		"version": "0.2021.12.4"
 	},
 	"repositories": [
 		{
@@ -46,7 +46,9 @@
 			"fabric",
 		],
 		"python_packages": [
+			"invoke",
 			"jk_prettyprintobj",
+			"jk_cmdoutputparsinghelper",
 		],
 		"python_packages_dev": [],
 		"system_apt_packages": []
