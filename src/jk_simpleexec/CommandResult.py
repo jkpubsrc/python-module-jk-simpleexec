@@ -149,6 +149,14 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 		return (self.__returnCode != 0) or (len(self.__stdErr.lines) > 0)
 	#
 
+	#
+	# Returns <c>True</c> if the return code is non-zero.
+	#
+	@property
+	def isErrorRC(self) -> bool:
+		return self.__returnCode != 0
+	#
+
 	################################################################################################################################
 	## Helper Methods
 	################################################################################################################################
@@ -161,12 +169,33 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 			"stdErrLines",
 			"returnCode",
 			"isError",
+			"isErrorRC",
 		]
 	#
 
 	################################################################################################################################
 	## Public Methods
 	################################################################################################################################
+
+	#
+	# If the return code is non-zero
+	# an exception is thrown using the specified exception message.
+	# This is a convenience function very similar to raiseExceptionOnError().
+	#
+	def assertSuccess(self, logOrLogFunction = None):
+		if self.__returnCode != 0:
+			if logOrLogFunction:
+				printFunc = getattr(logOrLogFunction, "warn", None)
+				if printFunc is None:
+					printFunc = getattr(logOrLogFunction, "info", None)
+				if printFunc is None:
+					assert callable(logOrLogFunction)
+					printFunc = logOrLogFunction
+				self.dump(printFunc=printFunc)
+			raise Exception("Failed to execute command: " + self.__cmd)
+
+		return self
+	#
 
 	#
 	#
@@ -200,7 +229,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	#
 
 	#
-	# If the return code is no-zero or <c>STDERR</c> contains data
+	# If the return code is non-zero or <c>STDERR</c> contains data
 	# an exception is thrown using the specified exception message.
 	#
 	# @param		str exceptionMessage			The message for the exception raised.
@@ -211,8 +240,8 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 			if bDumpStatusOnError:
 				self.dump(printFunc = printFunc)
 			raise Exception(exceptionMessage)
-		else:
-			return self
+
+		return self
 	#
 
 	"""
