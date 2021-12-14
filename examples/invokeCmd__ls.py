@@ -8,7 +8,7 @@ import jk_simpleexec
 
 
 
-cmdResult = jk_simpleexec.invokeCmd1(
+cmdResult = jk_simpleexec.invokeCmd2(
 	cmdPath = "/usr/bin/ls",
 	cmdArgs = [
 		"-la",

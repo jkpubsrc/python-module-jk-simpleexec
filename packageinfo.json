@@ -25,7 +25,7 @@
 		"license": "Apache2",
 		"name": "jk_simpleexec",
 		"packageClass": "python-module",
-		"version": "0.2021.12.4"
+		"version": "0.2021.12.14"
 	},
 	"repositories": [
 		{

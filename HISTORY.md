@@ -15,4 +15,8 @@
 	* Added convenience methods to `CommandResult`
 	* Improved `invokeCmd1()` to support logging
 
+* 2021-12-14
+	* Set `invokeCmd1()` as deprecated.
+	* Replaced `invokeCmd1()` by `invokeCmd2()` to have an API that is more friendly to future changes.
+
 

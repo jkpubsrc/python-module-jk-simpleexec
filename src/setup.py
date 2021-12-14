@@ -43,7 +43,7 @@ setup(
 	packages = [
 		"jk_simpleexec",
 	],
-	version = "0.2021.12.4",
+	version = "0.2021.12.14",
 	zip_safe = False,
 	long_description = readme(),
 	long_description_content_type="text/markdown",
