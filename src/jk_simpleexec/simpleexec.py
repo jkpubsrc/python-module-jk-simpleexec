@@ -5,6 +5,7 @@ import os
 import sys
 import subprocess
 import typing
+import time
 
 from .CommandResult import CommandResult
 from .TextDataProcessingPolicy import TextDataProcessingPolicy
@@ -75,12 +76,14 @@ def invokeCmd(
 			_common.debugValve("================================================================================================================================")
 			_common.debugValve("EXECUTING:", cmd)
 
+		tStart = time.time()
 		if dataToPipeAsStdIn:
 			p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
 			p.stdin.write(dataToPipeAsStdIn)
 		else:
 			p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=None)
 		(stdout, stderr) = p.communicate()
+		tDuration = time.time() - tStart
 
 		output = []
 		stdOutData = stdout.decode("utf-8")
@@ -112,7 +115,7 @@ def invokeCmd(
 		if _common.debugValve != None:
 			_common.debugValve("RETURN CODE:", p.returncode)
 
-		return CommandResult(cmdPath, cmdArgs, output, outputErr, p.returncode)
+		return CommandResult(cmdPath, cmdArgs, output, outputErr, p.returncode, tDuration)
 
 	finally:
 		if returnToDirectory:
@@ -212,6 +215,8 @@ def invokeCmd2(
 	assert isinstance(cmdPath, str)
 	if cmdArgs is not None:
 		assert isinstance(cmdArgs, (list, tuple))
+		for x in cmdArgs:
+			assert isinstance(x, str)
 
 	if workingDirectory is not None:
 		assert isinstance(workingDirectory, str)
@@ -247,22 +252,24 @@ def invokeCmd2(
 				if printFunc is None:
 					assert callable(log)
 					printFunc = log
-			printFunc("run: " + cmdPath + " " + str(cmdArgs))
+			printFunc("run: " + str(cmd))
 
 		# write data to debug valve
 
 		if _common.debugValve:
 			_common.debugValve("================================================================================================================================")
-			_common.debugValve("EXECUTING:", cmd + " " + str(cmdArgs))
+			_common.debugValve("EXECUTING: " + str(cmd))
 
 		# run the processes
 
+		tStart = time.time()
 		if dataToPipeAsStdIn:
 			p = subprocess.Popen(cmd, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
 			p.stdin.write(dataToPipeAsStdIn)
 		else:
 			p = subprocess.Popen(cmd, shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=None)
 		(stdout, stderr) = p.communicate()
+		tDuration = time.time() - tStart
 
 		# process stdout
 
@@ -289,7 +296,7 @@ def invokeCmd2(
 		if _common.debugValve != None:
 			_common.debugValve("RETURN CODE:", p.returncode)
 
-		return CommandResult(cmdPath, cmdArgs, stdOutData, stdErrData, p.returncode)
+		return CommandResult(cmdPath, cmdArgs, stdOutData, stdErrData, p.returncode, tDuration)
 
 	finally:
 		if returnToDirectory:

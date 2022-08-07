@@ -2,6 +2,8 @@
 import os
 import subprocess
 import invoke
+import typing
+import time
 
 from . import _common as _common
 from .CommandResult import CommandResult
@@ -58,8 +60,10 @@ def runCmd(
 		if _common.debugValve:
 			_common.debugValve("Invoking via subprocess: " + repr(command))
 
+		tStart = time.time()
 		p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 		binStdOut, binStdErr = p.communicate()
+		tDuration = time.time() - tStart
 		stdOut = binStdOut.decode("utf-8")
 		stdErr = binStdErr.decode("utf-8")
 
@@ -78,7 +82,7 @@ def runCmd(
 		stdOut = _common.processCmdOutput(stdOut, stdOutProcessing)
 		stdErr = _common.processCmdOutput(stdErr, stdErrProcessing)
 
-		return CommandResult(command, None, stdOut, stdErr, p.returncode)
+		return CommandResult(command, None, stdOut, stdErr, p.returncode, tDuration)
 
 	# execute command remotely with fabric
 
@@ -86,10 +90,12 @@ def runCmd(
 		if _common.debugValve:
 			_common.debugValve("Invoking via fabric: " + repr(command))
 
+		tStart = time.time()
 		try:
 			r = c.run(command, hide=True)
 		except invoke.exceptions.UnexpectedExit as ee:
 			r = ee.result
+		tDuration = time.time() - tStart
 
 		if _common.debugValve:
 			_common.debugValve("exit status:", r.exited)
@@ -106,7 +112,7 @@ def runCmd(
 		stdOut = _common.processCmdOutput(r.stdout, stdOutProcessing)
 		stdErr = _common.processCmdOutput(r.stderr, stdErrProcessing)
 
-		return CommandResult(command, None, stdOut, stdErr, r.exited)
+		return CommandResult(command, None, stdOut, stdErr, r.exited, tDuration)
 
 	# error
 

@@ -6,3 +6,5 @@ src/**/__pycache__/
 examples/__pycache__/
 .svn/
 .vscode
+*.old
+*.bak

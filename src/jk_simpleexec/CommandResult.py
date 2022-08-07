@@ -34,6 +34,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 			stdOut:typing.Union[list,tuple,str,TextData],
 			stdErr:typing.Union[list,tuple,str,TextData],
 			returnCode:int,
+			duration:float = -1,
 		):
 
 		self.__cmd = cmd
@@ -41,6 +42,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 		self.__stdOut = stdOut if isinstance(stdOut, TextData) else TextData(stdOut)
 		self.__stdErr = stdErr if isinstance(stdErr, TextData) else TextData(stdErr)
 		self.__returnCode = returnCode
+		self.__duration = duration
 	#
 
 	################################################################################################################################
@@ -63,7 +65,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	# @return		str[]		The list of arguments (possibly an empty list or <c>None</c>).
 	#
 	@property
-	def commandArguments(self) -> list:
+	def commandArguments(self) -> typing.List[str]:
 		return self.__cmdArgs
 	#
 
@@ -84,7 +86,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	# @return		str[]		The output split into seperate lines. This property always returns a list, never <c>None</c>.
 	#
 	@property
-	def stdOutLines(self) -> list:
+	def stdOutLines(self) -> typing.List[str]:
 		return self.__stdOut.lines
 	#
 
@@ -95,7 +97,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 	# @return		str[]		The output split into seperate lines. This property always returns a list, never <c>None</c>.
 	#
 	@property
-	def stdErrLines(self) -> list:
+	def stdErrLines(self) -> typing.List[str]:
 		return self.__stdErr.lines
 	#
 
@@ -157,6 +159,11 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 		return self.__returnCode != 0
 	#
 
+	@property
+	def duration(self) -> float:
+		return self.__duration
+	#
+
 	################################################################################################################################
 	## Helper Methods
 	################################################################################################################################
@@ -170,6 +177,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 			"returnCode",
 			"isError",
 			"isErrorRC",
+			"duration",
 		]
 	#
 
@@ -278,6 +286,7 @@ class CommandResult(jk_prettyprintobj.DumpMixin):
 			"stdOut" : self.__stdOut.lines,
 			"stdErr" : self.__stdErr.lines,
 			"retCode" : self.__returnCode,
+			"duration": self.__duration,
 		}
 	#
 

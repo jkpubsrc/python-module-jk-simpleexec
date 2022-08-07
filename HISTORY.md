@@ -19,4 +19,12 @@
 	* Set `invokeCmd1()` as deprecated.
 	* Replaced `invokeCmd1()` by `invokeCmd2()` to have an API that is more friendly to future changes.
 
+* 2022-03-01
+	* Added duration time measurement
+
+* 2022-03-07
+	* Improved argument type checking
+
+* 2022-08-07
+	* Improved: Type hints
 

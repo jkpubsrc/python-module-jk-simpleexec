@@ -24,7 +24,7 @@ setup(
 		"Programming Language :: Python :: 3",
 	],
 	description = "Python module to run command line programs in a convenient way and retrieve their output after they terminated.",
-	include_package_data = False,
+	include_package_data = True,
 	install_requires = [
 		"invoke",
 		"jk_prettyprintobj",
@@ -40,11 +40,17 @@ setup(
 	],
 	license = "Apache2",
 	name = "jk_simpleexec",
+	package_data = {
+		"": [
+		],
+	},
 	packages = [
 		"jk_simpleexec",
 	],
-	version = "0.2021.12.14",
+	scripts = [
+	],
+	version = '0.2022.8.7',
 	zip_safe = False,
 	long_description = readme(),
-	long_description_content_type="text/markdown",
+	long_description_content_type = "text/markdown",
 )

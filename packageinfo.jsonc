@@ -1,5 +1,4 @@
 {
-	"documentation": [],
 	"magic": {
 		"magic": "packageinfo",
 		"version": 2
@@ -25,32 +24,21 @@
 		"license": "Apache2",
 		"name": "jk_simpleexec",
 		"packageClass": "python-module",
-		"version": "0.2021.12.14"
+		"version": "0.2022.8.7"
 	},
-	"repositories": [
-		{
-			"devon_publish": false,
-			"project": "python-module-jk-simpleexec",
-			"type": "github",
-			"user": "jkpubsrc"
-		},
-		{
-			"devon_publish": false,
-			"project": "jk-simpleexec",
-			"type": "pypi"
-		}
-	],
 	"requirements": {
-		"recommended_python_packages": [
-			"lxml",
-			"fabric",
-		],
+		// "recommended_python_packages": [
+		// 	"lxml",
+		// 	"fabric",
+		// ],
+		"htmlcssjs_packages": [],
 		"python_packages": [
 			"invoke",
 			"jk_prettyprintobj",
-			"jk_cmdoutputparsinghelper",
+			"jk_cmdoutputparsinghelper"
 		],
 		"python_packages_dev": [],
+		"python_packages_recommended": [],
 		"system_apt_packages": []
 	},
 	"source": {
