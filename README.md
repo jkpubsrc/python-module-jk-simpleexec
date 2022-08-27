@@ -8,7 +8,7 @@ This python module provides a convenient interface to execute commands and catch
 
 Information about this module can be found here:
 
-* [github.org](https://github.com/jkpubsrc/python-module-jk-simpleexec)
+* [github.com](https://github.com/jkpubsrc/python-module-jk-simpleexec)
 * [pypi.python.org](https://pypi.python.org/pypi/jk_simpleexec)
 
 How to use this module
