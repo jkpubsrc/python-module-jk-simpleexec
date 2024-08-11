@@ -24,7 +24,7 @@
 		"license": "Apache2",
 		"name": "jk_simpleexec",
 		"packageClass": "python-module",
-		"version": "0.2022.8.7"
+		"version": "0.2024.8.11"
 	},
 	"requirements": {
 		// "recommended_python_packages": [

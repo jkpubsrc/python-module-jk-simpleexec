@@ -28,3 +28,6 @@
 * 2022-08-07
 	* Improved: Type hints
 
+* 2024-08-11
+	* Migrated setup.py to pyproject.toml
+

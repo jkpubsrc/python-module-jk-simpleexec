@@ -1,0 +1,59 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "jk_simpleexec"
+dynamic = [ "version" ]
+authors = [
+	{ name = "Jürgen Knauth", email = "pubsrc@binary-overflow.de" },
+]
+maintainers = [
+	{ name = "Jürgen Knauth", email = "pubsrc@binary-overflow.de" },
+]
+description = "Python module to run command line programs in a convenient way and retrieve their output after they terminated."
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = [
+	"exec",
+	"shell",
+	"execute",
+	"Popen",
+	"kill",
+	"spawn",
+]
+license = { text = "Apache2" }
+classifiers = [
+	"Development Status :: 3 - Alpha",
+	"Programming Language :: Python :: 3",
+	"License :: OSI Approved :: Apache Software License",
+]
+dependencies = [
+	"invoke",
+	"jk_prettyprintobj",
+	"jk_cmdoutputparsinghelper",
+]
+
+#[project.urls]
+#Homepage = "https://example.com"
+#Documentation = "https://readthedocs.org"
+#Repository = "https://github.com/me/spam.git"
+#Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
+
+[tool.flit.sdist]
+exclude = [
+	"bin/",
+	"build/",
+	"dist/",
+	"sdist/",
+	"*.egg-info",
+	"*.OLD",
+	"setup.cfg",
+]
+
+#[project.scripts]
+
+
+
+
+
