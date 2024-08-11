@@ -30,4 +30,5 @@
 
 * 2024-08-11
 	* Migrated setup.py to pyproject.toml
+	* Added: whereis
 
